@@ -12,7 +12,12 @@ exports.createProduct = asyncErrors(async function (req, res, next) {
 });
 
 exports.getAllProducts = asyncErrors(async function (req, res) {
-  const feature = new Features(Product.find(), req.query).search().filter();
+  const resultPerPage = 5;
+  const productCount = await Product.countDocuments();
+  const feature = new Features(Product.find(), req.query)
+    .search()
+    .filter()
+    .pagination(resultPerPage);
 
   const products = await feature.query;
   res.status(200).json({
